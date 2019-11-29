@@ -60,17 +60,7 @@ Map2 = (
 
     ],
     [
-        Crosswalk((60, 400), 120, 4, interval=40, phase=0),
-        Crosswalk((180, 300), 120, 4, interval=30, phase=5),
-        Crosswalk((180, 500), 120, 4, interval=30, phase=15),
-        Crosswalk((300, 200), 120, 4, interval=20, phase=30),
-        Crosswalk((300, 600), 120, 4, interval=20, phase=40),
-        Crosswalk((420, 400), 120, 4, interval=40, phase=55),
-        Crosswalk((540, 600), 120, 4, interval=20, phase=65),
-        Crosswalk((540, 200), 120, 4, interval=20, phase=80),
-        Crosswalk((660, 300), 120, 4, interval=30, phase=70),
-        Crosswalk((660, 500), 120, 4, interval=30, phase=85),
-        Crosswalk((780, 400), 120, 4, interval=40, phase=95),
+        
     ],
     [
 
