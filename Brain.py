@@ -1,12 +1,15 @@
 import time
 import pygame
 
+CAR_SPEED = 9
+CAR_SPEED_CH = 2
 
 class Brain:
     def __init__(self, database):
         self.database = database
 
     def run(self):
+        time.sleep(0.5)
         while True:
             if self.database.stop:
                 break
@@ -14,45 +17,48 @@ class Brain:
             time.sleep(0.001)
             _ = pygame.event.get()
 
-            '''
-            DO NOT CHANGE CODE ABOVE!!!!
+            # Determine steering angle - using LiDAR data
+            steer_angle = 0         # -8 ~ 8
+            speed = CAR_SPEED       # 0 ~ 10
+            lidar_data = self.database.lidar.data   # Array[180]
 
-            1. How can i get a lidar data?
-                data = self.database.lidar.data
+            rrr = lidar_data[20]
+            rr = lidar_data[30]
+            r = lidar_data[45]
+            l = lidar_data[135]
+            ll = lidar_data[150]
+            lll = lidar_data[160]
 
-            2. How can i move a car?
-                self.database.control.up()
-                self.database.control.down()
-                self.database.control.right()
-                self.database.control.left()
+            if lll < 60:
+                steer_angle += 4
+            if ll == 100:
+                steer_angle -= 3
+            if l == 100:
+                steer_angle -= 2
+            if r == 100:
+                steer_angle += 2
+            if rr == 100:
+                steer_angle += 3
+            if rrr < 60:
+                steer_angle -= 4
 
-                OR
-
-                self.up(num)
-                self.down(num)
-                self.right(num)
-                self.left(num)
-
-                ☆☆☆☆☆ In one loop,
-                you can only change the speed up to 5 and the angle up to 8!!
-
-            3. How can i get a car status data?
-                self.database.car.direction
-                self.database.car.speed
-
-            4. How can i get a v2x data?
-                self.database.v2x_data
-            '''
-
-            # Implement Your Algorithm HERE!!
-
-            # EXAMPLE CODE1: 속도 2로 유지하면서 오른쪽으로 회전하기
-            self.right()
-
-            if self.database.car.speed <= 2:
-                self.up()
-            elif self.database.car.speed > 3:
-                self.down()
+            # Send controling data to the car
+            if steer_angle > 0:
+                self.right(steer_angle)
+                if steer_angle >= 6:
+                    speed -= 1
+            else:
+                self.left(-(steer_angle))
+                if steer_angle <= -6:
+                    speed -= 1
+            
+            # Velocity control
+            if self.database.car.speed < speed:
+                self.up(CAR_SPEED_CH)
+            elif self.database.car.speed > speed:
+                self.down(CAR_SPEED_CH)
+            else:
+                pass
 
     def up(self, num: int = 1):
         for i in range(num):
